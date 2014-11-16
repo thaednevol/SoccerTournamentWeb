@@ -1,0 +1,120 @@
+-- phpMyAdmin SQL Dump
+-- version 4.2.6deb1
+-- http://www.phpmyadmin.net
+--
+-- Servidor: localhost
+-- Tiempo de generación: 16-11-2014 a las 16:00:55
+-- Versión del servidor: 5.5.40-0ubuntu1
+-- Versión de PHP: 5.5.12-2ubuntu4.1
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Base de datos: `SoccerTournament`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `Players`
+--
+
+CREATE TABLE IF NOT EXISTS `Players` (
+  `id` int(11) NOT NULL,
+  `back` varchar(150) NOT NULL,
+  `number` int(11) NOT NULL,
+  `position` enum('Goalkeeper','Defense','Midfield','Attack') NOT NULL,
+  `foot` enum('Right','Left','Both','None') NOT NULL,
+  `users_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `Teams`
+--
+
+CREATE TABLE IF NOT EXISTS `Teams` (
+  `id` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `stadium` varchar(150) NOT NULL,
+  `legalRepresentant` int(11) NOT NULL,
+  `trainer` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `Users`
+--
+
+CREATE TABLE IF NOT EXISTS `Users` (
+`id` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `firstsurname` varchar(150) DEFAULT NULL,
+  `lastsurname` varchar(150) NOT NULL,
+  `docid` int(11) NOT NULL,
+  `docidtype` enum('Cedula de ciudadania','Cedula de extranjeria','Tarjeta de identidad','Pasaporte') NOT NULL,
+  `birthdate` date NOT NULL,
+  `sex` enum('Male','Female') NOT NULL,
+  `nationality` enum('Colombiano','Argetino','Brasileiro','Europeo') DEFAULT NULL,
+  `phone` int(11) DEFAULT NULL,
+  `mobile` int(11) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Volcado de datos para la tabla `Users`
+--
+
+INSERT INTO `Users` (`id`, `name`, `firstsurname`, `lastsurname`, `docid`, `docidtype`, `birthdate`, `sex`, `nationality`, `phone`, `mobile`, `email`) VALUES
+(1, 'Luisa', 'Quiroga', '', 1032369782, 'Cedula de ciudadania', '2014-11-12', 'Female', 'Colombiano', 7723990, 2147483647, 'luisa@correo.com');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `Players`
+--
+ALTER TABLE `Players`
+ ADD KEY `Players_ibfk_1` (`users_id`);
+
+--
+-- Indices de la tabla `Teams`
+--
+ALTER TABLE `Teams`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `indice` (`legalRepresentant`), ADD KEY `Teams_ibfk_2` (`trainer`);
+
+--
+-- Indices de la tabla `Users`
+--
+ALTER TABLE `Users`
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `docid` (`docid`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `Users`
+--
+ALTER TABLE `Users`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `Players`
+--
+ALTER TABLE `Players`
+ADD CONSTRAINT `Players_ibfk_1` FOREIGN KEY (`users_id`) REFERENCES `Users` (`id`);
+
+--
+-- Filtros para la tabla `Teams`
+--
+ALTER TABLE `Teams`
+ADD CONSTRAINT `Teams_ibfk_2` FOREIGN KEY (`trainer`) REFERENCES `Users` (`id`),
+ADD CONSTRAINT `Teams_ibfk_1` FOREIGN KEY (`legalRepresentant`) REFERENCES `Users` (`id`);
